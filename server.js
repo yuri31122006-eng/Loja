@@ -1,5 +1,5 @@
 /**
- * BACKEND BÁSICO (API) - Loja Pink Versão 3.2 (Produção)
+ * BACKEND BÁSICO (API) - Loja Pink (Produção)
  */
 
 const express = require('express');
@@ -12,8 +12,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 👉 Corrigido: caminho do front mais seguro
-const frontPath = path.join(__dirname, 'front'); // ← ALTERADO AQUI
+// ✅ CORRETO: usar a raiz do projeto (onde está o index.html)
+const frontPath = __dirname;
 
 app.use(express.static(frontPath));
 
@@ -73,20 +73,20 @@ app.post('/api/checkout', (req, res) => {
 });
 
 // ==========================================
-// 👉 ROTA PADRÃO + FALLBACK (IMPORTANTE)
+// ROTAS FRONT
 // ==========================================
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(frontPath, 'index.html'));
 });
 
-// 👉 IMPORTANTE: fallback para qualquer rota
+// fallback (SPA)
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontPath, 'index.html'));
 });
 
 // ==========================================
-// 3. SERVIDOR
+// SERVIDOR
 // ==========================================
 
 const PORT = process.env.PORT || 3000;
