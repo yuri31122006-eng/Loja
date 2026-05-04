@@ -1,22 +1,23 @@
 /**
- * BACKEND BÁSICO (API) - Loja Pink Versão 3.0
+ * BACKEND BÁSICO (API) - Loja Pink Versão 3.1 (Corrigido)
  */
 
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // 👉 ADICIONADO
+const path = require('path');
 
 const app = express();
 
-// Permite que o Front-end converse com este servidor sem bloqueios
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// 👉 SERVIR O FRONT-END JUNTO COM O BACKEND
-app.use(express.static(path.join(__dirname, '../front')));
+// 👉 Caminho absoluto seguro para o front
+const frontPath = path.join(__dirname, '../front');
+app.use(express.static(frontPath));
 
 // ==========================================
-// 1. "BANCO DE DADOS" (Em memória para testes)
+// 1. "BANCO DE DADOS" (Em memória)
 // ==========================================
 const BancoDeDados = {
     produtos: [
@@ -37,17 +38,19 @@ app.get('/api/produtos', (req, res) => {
 
 app.post('/api/checkout', (req, res) => {
     const { carrinhoFront, cupom, usuario } = req.body;
+
     let total = 0;
 
     carrinhoFront.forEach(item => {
         const produto = BancoDeDados.produtos.find(p => p.id === item.id);
+
         if (produto && produto.estoque >= item.quantidade) {
             total += produto.preco * item.quantidade;
             produto.estoque -= item.quantidade;
         }
     });
 
-    let desconto = cupom === 'PINK10' ? 10 : 0;
+    const desconto = cupom === 'PINK10' ? 10 : 0;
     const valorFinal = Math.max(0, total - desconto);
 
     const pedido = {
@@ -69,11 +72,18 @@ app.post('/api/checkout', (req, res) => {
 });
 
 // ==========================================
-// 3. INICIAR SERVIDOR
+// 👉 ROTA PADRÃO (IMPORTANTE)
+// ==========================================
+app.get('/', (req, res) => {
+    res.sendFile(path.join(frontPath, 'index.html'));
+});
+
+// ==========================================
+// 3. INICIAR SERVIDOR (CORRIGIDO)
 // ==========================================
 
-const PORTA = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORTA, () => {
-    console.log(`Servidor rodando em http://localhost:${PORTA}`);
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
