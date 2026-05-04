@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja Pink | E-commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header id="cabecalho">
+        <button id="btn-hamburguer" onclick="Menu.abrir()">☰</button>
+        <div class="logo">Loja Pink</div>
+        <div class="icone-carrinho" onclick="Pagamento.abrirCarrinho()">
+            🛍️ <span id="contador-carrinho">0</span>
+        </div>
+    </header>
+
+    <div id="overlay-menu" onclick="Menu.fechar()"></div>
+    <nav id="menu-lateral">
+        <button id="btn-fechar-menu" onclick="Menu.fechar()">✕</button>
+        <ul class="lista-menu" id="menu-links">
+            <li><a href="#" onclick="Menu.navegarPara('vitrine')">🌸 Nossa Coleção</a></li>
+            <li><a href="#" onclick="Auth.abrirPainel()">👤 Minha Conta</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="home" class="secao-site">
+            <h1>Sinta-se linda.</h1>
+            <p>Tendências exclusivas para todo o Brasil.</p>
+            <button class="btn-primario" onclick="document.getElementById('vitrine').scrollIntoView({ behavior: 'smooth' });">Explorar Loja</button>
+        </section>
+
+        <section id="vitrine" class="secao-site">
+            <h2>Nossa Coleção</h2>
+            <div class="grid-produtos" id="lista-produtos"></div>
+        </section>
+    </main>
+
+    <div id="perfil-sec" class="tela-modal">
+        <div class="conteudo-modal">
+            <button class="btn-fechar-modal" onclick="Modal.fechar('perfil-sec')">✕</button>
+            <div class="container-seguro" style="text-align: center;">
+                <div style="font-size: 50px; margin-bottom: 10px;">👤</div>
+                <h2 id="perfil-nome" style="margin-bottom: 5px;">Nome do Usuário</h2>
+                <p id="perfil-email" style="font-size: 14px; color: #888; margin-bottom: 20px;">email@exemplo.com</p>
+                
+                <h3 style="font-size: 16px; text-align: left; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Histórico de Compras</h3>
+                <div id="historico-lista" style="text-align: left; max-height: 200px; overflow-y: auto; margin-bottom: 20px;">
+                    <p style="font-size: 13px; color: #bbb;">Nenhuma compra realizada ainda.</p>
+                </div>
+
+                <button class="btn-secundario" style="width: 100%; color: #D81B60;" onclick="Auth.logout()">Sair da Conta</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-sec" class="tela-modal">
+        <div class="conteudo-modal">
+            <button class="btn-fechar-modal" onclick="Modal.fechar('login-sec')">✕</button>
+            <div class="container-seguro" style="text-align: center;">
+                <h2 style="font-size: 20px; margin-bottom: 15px;">Acesso Rápido</h2>
+                
+                <div id="auth-passo-email">
+                    <p style="font-size: 13px; margin-bottom: 15px;">Digite seu e-mail para entrar ou cadastrar.</p>
+                    <div class="grupo-input">
+                        <input type="email" id="email-verificacao" placeholder="seu@email.com">
+                    </div>
+                    <button class="btn-primario" onclick="Auth.verificarEmail()">Continuar</button>
+                </div>
+
+                <div id="auth-passo-login" style="display: none;">
+                    <p style="font-size: 13px; margin-bottom: 15px;">Que bom te ver de novo!</p>
+                    <div class="grupo-input">
+                        <input type="password" id="senha-login" placeholder="Sua senha">
+                    </div>
+                    <button class="btn-primario" onclick="Auth.fazerLogin()">Entrar</button>
+                    <button style="background:none; border:none; color:#D81B60; margin-top:10px; cursor:pointer;" onclick="Auth.resetar()">Voltar</button>
+                </div>
+
+                <div id="auth-passo-cadastro" style="display: none;">
+                    <p style="font-size: 13px; margin-bottom: 15px;">Crie sua conta rapidinho!</p>
+                    <div class="grupo-input">
+                        <input type="text" id="nome-cadastro" placeholder="Seu nome completo">
+                    </div>
+                    <div class="grupo-input">
+                        <input type="password" id="senha-cadastro" placeholder="Crie uma senha">
+                    </div>
+                    <button class="btn-primario" onclick="Auth.fazerCadastro()">Criar Conta</button>
+                    <button style="background:none; border:none; color:#D81B60; margin-top:10px; cursor:pointer;" onclick="Auth.resetar()">Voltar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pagamento-sec" class="tela-modal">
+        <div class="conteudo-modal">
+            <button class="btn-fechar-modal" onclick="Modal.fechar('pagamento-sec')">✕</button>
+            
+            <div id="passo-1-carrinho">
+                <h2 style="text-align: center; margin-bottom: 15px;">Sua Sacola</h2>
+                <div id="area-itens-carrinho" class="container-seguro"></div>
+                
+                <div class="container-seguro" style="display: flex; gap: 8px;">
+                    <input type="text" id="input-cupom" placeholder="Cupom (ex: PINK10)" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                    <button class="btn-primario" style="width: auto;" onclick="Checkout.aplicarCupom()">Aplicar</button>
+                </div>
+                
+                <div id="resumo-valores" style="text-align: right; font-weight: bold; font-size: 18px; color: #D81B60; margin: 15px 0;"></div>
+                <button class="btn-primario" onclick="Checkout.irParaPagamento()">Continuar para Entrega</button>
+            </div>
+
+            <div id="passo-2-pagamento" style="display: none;">
+                <button class="btn-secundario" onclick="Checkout.voltarParaCarrinho()">⬅ Voltar para Sacola</button>
+                
+                <div class="container-seguro">
+                    <h3 style="font-size: 15px; margin-bottom: 10px;">📍 Endereço de Entrega</h3>
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                        <input type="text" id="cep" placeholder="CEP: 00000-000" maxlength="9" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                        <button class="btn-primario" style="width: auto;" onclick="Endereco.buscarCEP()">Buscar</button>
+                    </div>
+                    <div id="detalhes-endereco" style="display: none;">
+                        <p id="txt-endereco" style="font-size: 12px; margin-bottom: 8px; font-weight: bold; color: #444;"></p>
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" id="num-casa" placeholder="Nº" style="width: 30%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                            <select id="tipo-residencia" style="width: 70%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: white;">
+                                <option value="Casa">Casa</option>
+                                <option value="Apartamento">Apartamento</option>
+                            </select>
+                        </div>
+                        <input type="text" id="complemento" placeholder="Bloco, Apt, Ponto de Referência" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                </div>
+
+                <div class="container-seguro">
+                    <h3 style="font-size: 15px; margin-bottom: 10px;">💳 Pagamento</h3>
+                    <div class="opcoes-pagamento">
+                        <button id="btn-pix" class="btn-metodo selecionado" onclick="Pagamento.selecionarMetodo('pix')">💠 Pix</button>
+                        <button id="btn-cartao" class="btn-metodo" onclick="Pagamento.selecionarMetodo('cartao')">💳 Cartão</button>
+                    </div>
+
+                    <div id="ui-pix" class="painel-pagamento">
+                        <p style="font-size: 12px; color: #D81B60; font-weight: bold; margin-bottom: 10px;">Aprovação Imediata!</p>
+                        <div style="width: 150px; height: 150px; border: 2px dashed #ccc; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #fff;">
+                            📱 QR Code
+                        </div>
+                        <p style="font-size: 11px; margin-bottom: 5px;">Ou use o Pix Copia e Cola:</p>
+                        <input type="text" value="00020126580014br.gov.bcb.pix..." readonly style="width: 100%; padding: 8px; font-size: 10px; text-align: center; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <div id="ui-cartao" class="painel-pagamento" style="display: none; text-align: left;">
+                        <div class="grupo-input">
+                            <label>CPF do Titular</label>
+                            <input type="text" id="cpf-cartao" placeholder="000.000.000-00" maxlength="14">
+                        </div>
+                        <div class="grupo-input">
+                            <label>Número do Cartão</label>
+                            <input type="text" id="num-cartao" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="grupo-input" style="flex: 1;">
+                                <label>Validade</label>
+                                <input type="text" id="data-cartao" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="grupo-input" style="flex: 1;">
+                                <label>CVC</label>
+                                <input type="password" id="cvc-cartao" placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                        <div class="grupo-input">
+                            <label>Nome no Cartão</label>
+                            <input type="text" id="nome-cartao" placeholder="Como impresso no cartão">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primario" id="btn-finalizar" onclick="Checkout.finalizarPedido()">Finalizar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="ui.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
