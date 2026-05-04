@@ -1,5 +1,5 @@
 /**
- * BACKEND BÁSICO (API) - Loja Pink Versão 3.1 (Corrigido)
+ * BACKEND BÁSICO (API) - Loja Pink Versão 3.2 (Produção)
  */
 
 const express = require('express');
@@ -12,12 +12,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 👉 Caminho absoluto seguro para o front
-const frontPath = path.join(__dirname, '../front');
+// 👉 Corrigido: caminho do front mais seguro
+const frontPath = path.join(__dirname, 'front'); // ← ALTERADO AQUI
+
 app.use(express.static(frontPath));
 
 // ==========================================
-// 1. "BANCO DE DADOS" (Em memória)
+// 1. "BANCO DE DADOS"
 // ==========================================
 const BancoDeDados = {
     produtos: [
@@ -29,7 +30,7 @@ const BancoDeDados = {
 };
 
 // ==========================================
-// 2. ROTAS DA API
+// 2. ROTAS
 // ==========================================
 
 app.get('/api/produtos', (req, res) => {
@@ -72,14 +73,20 @@ app.post('/api/checkout', (req, res) => {
 });
 
 // ==========================================
-// 👉 ROTA PADRÃO (IMPORTANTE)
+// 👉 ROTA PADRÃO + FALLBACK (IMPORTANTE)
 // ==========================================
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(frontPath, 'index.html'));
 });
 
+// 👉 IMPORTANTE: fallback para qualquer rota
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontPath, 'index.html'));
+});
+
 // ==========================================
-// 3. INICIAR SERVIDOR (CORRIGIDO)
+// 3. SERVIDOR
 // ==========================================
 
 const PORT = process.env.PORT || 3000;
